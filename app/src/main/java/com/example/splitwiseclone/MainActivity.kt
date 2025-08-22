@@ -175,6 +175,7 @@ fun GroupDetailsScreen(
     onAddExpense: (Expense) -> Unit
 ) {
     var showAddExpenseDialog by remember { mutableStateOf(false) }
+    val settlements = calculateSettlements(group)
 
     Scaffold(
         topBar = {
@@ -199,6 +200,23 @@ fun GroupDetailsScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text("Balances", style = MaterialTheme.typography.titleLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    if (settlements.isEmpty()) {
+                        Text("Everyone is settled up!", style = MaterialTheme.typography.bodyMedium)
+                    } else {
+                        settlements.forEach { settlement ->
+                            Text(
+                                "• ${settlement.from.name} owes ${settlement.to.name} ₹${"%.2f".format(settlement.amount)}",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Card(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text("Members", style = MaterialTheme.typography.titleLarge)
